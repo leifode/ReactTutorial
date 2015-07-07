@@ -3,6 +3,7 @@ var Router = require('react-router');
 var UserProfile = require('./github/UserProfile');
 var Repos = require('./github/Repos');
 var Notes = require('./notes/Notes');
+var Flights = require('./flights/Flights')
 var helpers = require('../utils/helpers')
 
 var Profile = React.createClass({
@@ -11,7 +12,18 @@ var Profile = React.createClass({
     return {
       notes: [],
       bio: {},
-      repos: []
+      repos: [],
+      flights: [
+        {
+          flight_no: 'DY998'
+        },
+        {
+          flight_no: 'DY999'
+        },
+        {
+          flight_no: 'DY1000'
+        }
+      ]
     }
   },
   componentDidMount: function(){
@@ -32,17 +44,20 @@ var Profile = React.createClass({
     var username = this.getParams().username;
     return (
       <div className="row">
-        <div className="col-md-4">
+        <div className="col-md-3">
           <UserProfile username={username} bio={this.state.bio} />
         </div>
-        <div className="col-md-4">
+        <div className="col-md-3">
           <Repos username={username} repos={this.state.repos} />
         </div>
-        <div className="col-md-4">
+        <div className="col-md-3">
           <Notes
             username={username}
             notes={this.state.notes}
             addNote={this.handleAddNote}/>
+        </div>
+        <div className="col-md-3">
+          <Flights flights={this.state.flights}/>
         </div>
       </div>
     );
