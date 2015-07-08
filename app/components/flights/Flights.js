@@ -11,6 +11,8 @@ class Flights extends React.Component{
       return(
         <li className="list-group-item" key={index}>
           {flight.flight_no && <Link to="final_fuel" params={{flight_id: flight.id}}>{flight.flight_no}</Link>}
+          <Link to="final_fuel" params={{flight_id: flight.id}}>test</Link> 
+
         </li>
       )
     });
