@@ -1,47 +1,62 @@
-var React = require('react');
-var Router = require('react-router');
-var UserProfile = require('./github/UserProfile');
-var Repos = require('./github/Repos');
-var Notes = require('./notes/Notes');
-var Flights = require('./flights/Flights')
-var helpers = require('../utils/helpers')
+import React from 'react';
+import UserProfile from './github/UserProfile';
+import Repos from './github/Repos';
+import Notes from './notes/Notes';
+import Flights from './flights/Flights';
+import helpers from '../utils/helpers';
 
-var Profile = React.createClass({
-  mixins: [Router.State],
-  getInitialState: function(){
-    return {
+class Profile extends React.Component{
+  constructor(props){
+    super(props)
+    this.state = {
       notes: [],
       bio: {},
       repos: [],
       flights: [
         {
+          id: '1',
           flight_no: 'DY998'
         },
         {
+          id: '2',
           flight_no: 'DY999'
         },
         {
+          id: '3',
           flight_no: 'DY1000'
         }
       ]
     }
-  },
-  componentDidMount: function(){
-    helpers.getGithubInfo(this.getParams().username)
+  }
+  init(){
+    helpers.getGithubInfo(this.router.getCurrentParams().username)
       .then(function(dataObj){
         this.setState({
           bio:  dataObj.bio,
           repos: dataObj.repos
         });
       }.bind(this));
-  },
-  handleAddNote: function(newNote){
+
+      this.setState({
+        notes: []
+      });
+  }
+  componentWillMount(){
+    this.router = this.context.router;
+  }
+  componentDidMount(){
+    this.init();
+  }
+  componentWillReceiveProps(){
+    this.init();
+  }
+  handleAddNote(newNote){
     this.setState({
       notes: this.state.notes.concat([newNote])
     });
-  },
-  render: function(){
-    var username = this.getParams().username;
+  }
+  render(){
+    var username = this.router.getCurrentParams().username;
     return (
       <div className="row">
         <div className="col-md-3">
@@ -54,7 +69,7 @@ var Profile = React.createClass({
           <Notes
             username={username}
             notes={this.state.notes}
-            addNote={this.handleAddNote}/>
+            addNote={this.handleAddNote.bind(this)}/>
         </div>
         <div className="col-md-3">
           <Flights flights={this.state.flights}/>
@@ -62,6 +77,12 @@ var Profile = React.createClass({
       </div>
     );
   }
-});
+};
 
-module.exports = Profile;
+Profile.contextTypes = {
+  router: React.PropTypes.func.isRequired
+};
+
+export default Profile;
+
+  //mixins: [Router.State],

@@ -1,20 +1,16 @@
-var React = require('react');
-var Router = require('react-router');
+import React from 'react';
+import {Link} from 'react-router'
 
-var Flights = React.createClass({
-  mixins: [Router.Navigation],
-  propTypes: {
-    flights: React.PropTypes.array.isRequired
-  },
-  handleNewFinalFuel: function(flight_no){
-    this.transitionTo('final_fuel', {flight_no: flight_no})
-  },
-  render: function(){
+class Flights extends React.Component{
+  handleNewFinalFuel(state){
+    this.context.router.transitionTo('final_fuel', {flight_no: flight_no})
+  }
+  render(){
+    var self = this;
     var flights = this.props.flights.map(function(flight, index){
       return(
         <li className="list-group-item" key={index}>
-          {flight.flight_no && <b>{flight.flight_no}</b>}<br />
-        {flight.flight_no && <a href={flight.flight_no} onClick="handleNewFinalFuel()">Final Fuel</a>}
+          {flight.flight_no && <Link to="final_fuel" params={{flight_id: flight.id}}>{flight.flight_no}</Link>}
         </li>
       )
     });
@@ -27,6 +23,17 @@ var Flights = React.createClass({
       </div>
     )
   }
-});
+};
 
-module.exports = Flights;
+Flights.propTypes = {
+  flights: React.PropTypes.array.isRequired
+}
+
+Flights.contextTypes = {
+  router: React.PropTypes.func.isRequired
+};
+
+export default Flights;
+
+//var Router = require('react-router');
+//  mixins: [Router.Navigation],
